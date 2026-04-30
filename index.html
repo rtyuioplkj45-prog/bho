@@ -3,7 +3,11 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>NoteSpace GitHub Ready</title>
+<title>NoteSpace Responsive Pro</title>
+
+<!-- 🔥 ICONA FIX PER GITHUB PAGES -->
+<link rel="icon" type="image/png" href="./Appunti.png">
+<link rel="apple-touch-icon" href="./Appunti.png">
 
 <style>
 :root{
@@ -16,7 +20,7 @@
   margin:0;
   padding:0;
   box-sizing:border-box;
-  font-family:system-ui,sans-serif;
+  font-family:Inter,system-ui,sans-serif;
 }
 
 body{
@@ -27,6 +31,7 @@ body{
   background:url("https://static.vecteezy.com/ti/vettori-gratis/p1/7163621-illustrazione-di-sfondo-sfumato-astratto-azzurro-vettoriale.jpg") no-repeat center/cover;
 }
 
+/* APP BASE */
 .app{
   width:92vmin;
   height:92vmin;
@@ -165,44 +170,15 @@ textarea{
   border-radius:50%;
   border:none;
   cursor:pointer;
-  background:rgba(17,24,39,0.9);
+  font-size:18px;
   display:flex;
   align-items:center;
   justify-content:center;
   box-shadow:0 12px 25px rgba(0,0,0,0.4);
 }
 
-.fab svg{
-  width:24px;
-  height:24px;
-  fill:white;
-}
-
-/* MENU */
-.context-menu{
-  position:fixed;
-  display:none;
-  flex-direction:column;
-  background:rgba(15,23,42,0.95);
-  border-radius:12px;
-  padding:6px;
-  z-index:9999;
-}
-
-.context-menu button{
-  background:none;
-  border:none;
-  color:white;
-  padding:8px;
-  text-align:left;
-  cursor:pointer;
-  font-size:12px;
-  border-radius:8px;
-}
-
-.context-menu button:hover{
-  background:rgba(255,255,255,0.1);
-}
+.cam{background:#111827;color:white;}
+.ai{background:linear-gradient(135deg,var(--accent1),var(--accent2));color:white;}
 </style>
 </head>
 
@@ -229,21 +205,8 @@ textarea{
     <button class="save" onclick="save()">Salva</button>
 
     <div class="floating">
-
-      <!-- CAMERA ICON -->
-      <button class="fab" onclick="chooseImage()">
-        <svg viewBox="0 0 24 24">
-          <path d="M9 3l-1.5 2H5a2 2 0 00-2 2v12a2 2 0 002 2h14a2 2 0 002-2V7a2 2 0 00-2-2h-2.5L15 3H9zm3 15a4 4 0 110-8 4 4 0 010 8z"/>
-        </svg>
-      </button>
-
-      <!-- AI ICON -->
-      <button class="fab" onclick="openAI()">
-        <svg viewBox="0 0 24 24">
-          <path d="M12 2l2.5 6.5L21 12l-6.5 3.5L12 22l-2.5-6.5L3 12l6.5-3.5L12 2z"/>
-        </svg>
-      </button>
-
+      <button class="fab cam" onclick="chooseImage()">📷</button>
+      <button class="fab ai" onclick="openAI()">🤖</button>
     </div>
 
     <input type="file" id="fileInput" multiple accept="image/*" hidden>
@@ -251,20 +214,14 @@ textarea{
   </div>
 </div>
 
-<div class="context-menu" id="menu">
-  <button onclick="deleteNote()">🗑 Elimina</button>
-</div>
-
 <script>
 
 let notes = JSON.parse(localStorage.getItem("notes")) || [];
 let current=null;
 let images=[];
-let ctxIndex=null;
 
 render();
 
-/* NOTES */
 function newNote(){
   notes.push({text:"",images:[]});
   current=notes.length-1;
@@ -290,7 +247,6 @@ function render(){
   list.innerHTML="";
 
   notes.forEach((n,i)=>{
-
     let div=document.createElement("div");
     div.className="item";
     div.innerText=(n.text||"nota").split(" ").slice(0,2).join(" ");
@@ -302,32 +258,10 @@ function render(){
       renderImages();
     };
 
-    div.oncontextmenu=(e)=>{
-      e.preventDefault();
-      ctxIndex=i;
-      showMenu(e.pageX,e.pageY);
-    };
-
     list.appendChild(div);
   });
 }
 
-/* MENU */
-function showMenu(x,y){
-  let m=document.getElementById("menu");
-  m.style.display="flex";
-  m.style.left=x+"px";
-  m.style.top=y+"px";
-}
-
-window.onclick=()=>document.getElementById("menu").style.display="none";
-
-function deleteNote(){
-  notes.splice(ctxIndex,1);
-  save();
-}
-
-/* IMAGES */
 function renderImages(){
   let p=document.getElementById("preview");
   p.innerHTML="";
@@ -338,26 +272,20 @@ function renderImages(){
   });
 }
 
-function drop(e){
-  e.preventDefault();
-  for(let f of e.dataTransfer.files){
-    let r=new FileReader();
-    r.onload=()=>{images.push(r.result);renderImages();};
-    r.readAsDataURL(f);
-  }
-}
-
 function chooseImage(){
   document.getElementById("fileInput").click();
 }
 
-document.getElementById("fileInput").onchange=(e)=>{
+document.getElementById("fileInput").addEventListener("change", e=>{
   for(let f of e.target.files){
     let r=new FileReader();
-    r.onload=()=>{images.push(r.result);renderImages();};
+    r.onload=()=>{
+      images.push(r.result);
+      renderImages();
+    };
     r.readAsDataURL(f);
   }
-};
+});
 
 function openAI(){
   window.open("https://chatgpt.com","_blank");
