@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>NoteSpace Responsive Pro</title>
+
+<style>
+:root{
+  --glass: rgba(255,255,255,0.10);
+  --accent1:#6366f1;
+  --accent2:#06b6d4;
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Inter,system-ui,sans-serif;
+}
+
+body{
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:url("https://static.vecteezy.com/ti/vettori-gratis/p1/7163621-illustrazione-di-sfondo-sfumato-astratto-azzurro-vettoriale.jpg") no-repeat center/cover;
+}
+
+/* APP BASE */
+.app{
+  width:92vmin;
+  height:92vmin;
+  max-width:560px;
+  max-height:560px;
+  display:flex;
+  border-radius:28px;
+  overflow:hidden;
+  background:var(--glass);
+  backdrop-filter:blur(20px);
+  box-shadow:0 25px 70px rgba(0,0,0,0.4);
+}
+
+/* SIDEBAR */
+.sidebar{
+  width:110px;
+  background:rgba(2,6,23,0.9);
+  padding:10px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+.btn{
+  width:100%;
+  padding:6px;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  background:linear-gradient(135deg,var(--accent1),var(--accent2));
+  color:white;
+  font-size:12px;
+}
+
+.search{
+  width:100%;
+  padding:6px;
+  border-radius:10px;
+  border:none;
+  outline:none;
+  font-size:11px;
+}
+
+.list{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  overflow:auto;
+  flex:1;
+}
+
+.item{
+  background:rgba(255,255,255,0.12);
+  color:white;
+  font-size:10px;
+  padding:6px;
+  border-radius:10px;
+  cursor:pointer;
+  position:relative;
+}
+
+.pin{
+  position:absolute;
+  right:6px;
+  top:4px;
+  font-size:10px;
+}
+
+/* EDITOR */
+.editor{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  padding:10px;
+  gap:8px;
+  position:relative;
+}
+
+textarea{
+  flex:1;
+  border:none;
+  border-radius:14px;
+  padding:10px;
+  font-size:14px;
+  resize:none;
+  outline:none;
+}
+
+.preview{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+}
+
+.preview img{
+  width:48px;
+  height:48px;
+  border-radius:10px;
+  object-fit:cover;
+}
+
+.drop{
+  border:2px dashed rgba(99,102,241,0.6);
+  padding:10px;
+  text-align:center;
+  border-radius:14px;
+  font-size:12px;
+  font-weight:600;
+  color:#1f2937;
+  background:rgba(255,255,255,0.75);
+}
+
+.save{
+  width:100%;
+  padding:8px;
+  border:none;
+  border-radius:14px;
+  background:linear-gradient(135deg,#22c55e,#06b6d4);
+  color:white;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.floating{
+  position:absolute;
+  right:10px;
+  bottom:10px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+.fab{
+  width:52px;
+  height:52px;
+  border-radius:50%;
+  border:none;
+  cursor:pointer;
+  font-size:18px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 12px 25px rgba(0,0,0,0.4);
+}
+
+.cam{background:#111827;color:white;}
+.ai{background:linear-gradient(135deg,var(--accent1),var(--accent2));color:white;}
+
+/* MENU */
+.context-menu{
+  position:fixed;
+  display:none;
+  flex-direction:column;
+  background:rgba(15,23,42,0.95);
+  border-radius:12px;
+  padding:6px;
+  z-index:9999;
+}
+
+/* =========================
+   🔥 RESPONSIVE MOBILE FIX
+   ========================= */
+@media (max-width: 768px){
+
+  body{
+    align-items:stretch;
+  }
+
+  .app{
+    width:100%;
+    height:100%;
+    max-width:none;
+    max-height:none;
+    border-radius:0;
+  }
+
+  .sidebar{
+    width:80px;
+  }
+
+  .fab{
+    width:44px;
+    height:44px;
+    font-size:14px;
+  }
+
+  textarea{
+    font-size:13px;
+  }
+
+  .item{
+    font-size:9px;
+  }
+
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <div class="sidebar">
+    <button class="btn" onclick="newNote()">+ Nuova</button>
+    <button class="btn" onclick="togglePins()">📌 Pin</button>
+    <input class="search" id="search" placeholder="cerca..." oninput="render()">
+    <div class="list" id="list"></div>
+  </div>
+
+  <div class="editor">
+
+    <textarea id="text" placeholder="Scrivi..."></textarea>
+
+    <div class="preview" id="preview"></div>
+
+    <div class="drop" ondrop="drop(event)" ondragover="event.preventDefault()">
+      📤 Trascina immagini
+    </div>
+
+    <button class="save" onclick="save()">Salva</button>
+
+    <div class="floating">
+      <button class="fab cam" onclick="chooseImage()">📷</button>
+      <button class="fab ai" onclick="openAI()">🤖</button>
+    </div>
+
+    <input type="file" id="fileInput" multiple accept="image/*" hidden>
+
+  </div>
+</div>
+
+<div class="context-menu" id="menu">
+  <button onclick="renameNote()">✏️ Rinomina</button>
+  <button onclick="togglePin()">📌 Pin</button>
+  <button onclick="duplicateNote()">📄 Duplica</button>
+  <button onclick="deleteNote()">🗑 Elimina</button>
+</div>
+
+<script>
+
+let notes = JSON.parse(localStorage.getItem("notes")) || [];
+let current=null;
+let images=[];
+let ctxIndex=null;
+let showOnlyPins=false;
+let holdTimer=null;
+
+render();
+
+/* LONG PRESS MOBILE */
+function attachHold(el,i){
+  el.addEventListener("touchstart",(e)=>{
+    holdTimer=setTimeout(()=>{
+      ctxIndex=i;
+      showMenu(e.touches[0].clientX,e.touches[0].clientY);
+    },500);
+  });
+
+  el.addEventListener("touchend",()=>clearTimeout(holdTimer));
+  el.addEventListener("touchmove",()=>clearTimeout(holdTimer));
+}
+
+/* NOTES */
+function newNote(){
+  notes.push({text:"",images:[],pinned:false});
+  current=notes.length-1;
+  save();
+}
+
+function save(){
+  let text=document.getElementById("text").value;
+
+  if(current===null){
+    notes.push({text,images:[...images],pinned:false});
+    current=notes.length-1;
+  }else{
+    notes[current]={...notes[current],text,images:[...images]};
+  }
+
+  localStorage.setItem("notes",JSON.stringify(notes));
+  render();
+}
+
+function render(){
+  let list=document.getElementById("list");
+  list.innerHTML="";
+
+  let q=document.getElementById("search").value.toLowerCase();
+
+  let arr=[...notes];
+
+  if(showOnlyPins){
+    arr=arr.filter(n=>n.pinned);
+  }
+
+  arr.forEach((n,i)=>{
+
+    if(q && !n.text.toLowerCase().includes(q)) return;
+
+    let div=document.createElement("div");
+    div.className="item";
+    div.innerText=(n.text||"nota").split(" ").slice(0,2).join(" ");
+
+    if(n.pinned){
+      let p=document.createElement("span");
+      p.className="pin";
+      p.innerText="📌";
+      div.appendChild(p);
+    }
+
+    div.onclick=()=>{
+      current=i;
+      document.getElementById("text").value=n.text;
+      images=[...(n.images||[])];
+    };
+
+    div.oncontextmenu=(e)=>{
+      e.preventDefault();
+      ctxIndex=i;
+      showMenu(e.pageX,e.pageY);
+    };
+
+    attachHold(div,i);
+
+    list.appendChild(div);
+  });
+}
+
+/* MENU */
+function showMenu(x,y){
+  let m=document.getElementById("menu");
+  m.style.display="flex";
+  m.style.left=x+"px";
+  m.style.top=y+"px";
+}
+
+window.onclick=()=>document.getElementById("menu").style.display="none";
+
+function renameNote(){
+  let v=prompt("Nome:");
+  if(v!==null){
+    notes[ctxIndex].text=v;
+    save();
+  }
+}
+
+function togglePin(){
+  notes[ctxIndex].pinned=!notes[ctxIndex].pinned;
+  save();
+}
+
+function duplicateNote(){
+  notes.push({...notes[ctxIndex]});
+  save();
+}
+
+function deleteNote(){
+  notes.splice(ctxIndex,1);
+  save();
+}
+
+/* IMAGES */
+function chooseImage(){
+  document.getElementById("fileInput").click();
+}
+
+function openAI(){
+  window.open("https://chatgpt.com","_blank");
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,104 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  height: 100vh;
+  background: #1e1e1e;
+  color: #fff;
+}
+
+.app-container {
+  display: flex;
+  height: 100vh;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 250px;
+  background: #2b2b2b;
+  padding: 15px;
+  border-right: 1px solid #444;
+}
+
+.sidebar h2 {
+  margin-bottom: 10px;
+}
+
+.sidebar button {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  background: #4caf50;
+  border: none;
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.sidebar ul {
+  list-style: none;
+}
+
+.sidebar li {
+  padding: 10px;
+  background: #3a3a3a;
+  margin-bottom: 5px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.sidebar li:hover {
+  background: #555;
+}
+
+/* EDITOR */
+.editor {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.editor input {
+  font-size: 18px;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: none;
+  border-radius: 5px;
+}
+
+.editor textarea {
+  flex: 1;
+  padding: 10px;
+  resize: none;
+  font-size: 16px;
+  border-radius: 5px;
+  border: none;
+}
+
+.actions {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+}
+
+.actions button {
+  padding: 10px 15px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+#saveNoteBtn {
+  background: #2196f3;
+  color: white;
+}
+
+#deleteNoteBtn {
+  background: #f44336;
+  color: white;
+}
